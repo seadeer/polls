@@ -1,0 +1,38 @@
+.container{
+    border: 1px solid silver;
+    width: 70%;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.subdiv{
+    background-color: azure;
+    margin: 10px;
+    padding: 15px;
+    border: 1px solid silver;
+    border-radius: 5px;
+
+}
+
+.subdiv input{
+    margin: 5px;
+}
+
+.subdiv table{
+    border: 1px solid silver;
+    border-collapse: collapse;
+}
+    .subdiv table tr{
+        text-align: center;
+        padding-left: 20px;
+    }
+
+    .subdiv table thead{
+        background-color: #86BBC5;
+    }
+
+    .subdiv table td{
+        padding: 18px;
+        border: 1px solid silver;
+    }
