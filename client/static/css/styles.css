@@ -36,3 +36,11 @@
         padding: 18px;
         border: 1px solid silver;
     }
+.subdiv table td a{
+    background-color: azure;
+}
+.subdiv a{
+    background-color: #86BBC5;
+    padding: 5px;
+}
+
