@@ -1,6 +1,5 @@
-<div class="container" ng-controller = 'pollsController as PC'>
+<div class="subdiv" ng-init=PC.show()>
 
-    {{PC}}
     <a href="#/home">Return to Polls</a>
     <a href="/logout" ng-click=PC.logout()>Log Out</a>
     <h1>{{PC.thePoll.question}}</h1>

@@ -1,7 +1,8 @@
-<div class="container" ng-controller = 'pollsController as PC'>
+<div class="subdiv" ng-controller = 'pollsController as PC'>
     <a href="#/newpoll">Create a New Poll</a>
     <a href="/logout" ng-click=PC.logout()>Log Out</a>
     <h1>Current polls:</h1>
+    <input ng-model="filter_name">
     <table>
         <thead>
             <td>Name</td>
@@ -9,11 +10,11 @@
             <td>Date Posted</td>
             <td>Action</td>
         </thead>
-        <tr ng-repeat="poll in PC.polls">
+        <tr ng-repeat="poll in PC.polls | filter:filter_name">
             <td>{{poll._user.name}}</td>
-            <td><a href="#/show" ng-click="PC.show($index)">{{poll.question}}</a></td>
+            <td><a href='#/show/{{poll._id}}'>{{poll.question}}</a></td>
             <td>{{poll.created_at | date: 'short' }}</td>
-            <td><a href="#/delete" ng-click=PC.delete($index)>Delete</a></td>
+            <td><button ng-click=PC.delete($index)>Delete</button></td>
         </tr>
     </table>
 
