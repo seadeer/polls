@@ -30,4 +30,8 @@ module.exports = function(app){
         polls.vote(req, res);
     })
 
+    app.post('/polls/delete/:id', function(req, res){
+        polls.delete(req, res);
+    })
+
 }

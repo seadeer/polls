@@ -13,8 +13,9 @@ var pollsApp = angular.module('pollsApp', ['ngRoute', 'ngStorage']);
     .when('/home', {
         templateUrl: 'partials/pollsdash.html'
         })
-    .when('/show', {
-        templateUrl: 'partials/showpoll.html'
+    .when('/show/:id', {
+        templateUrl: 'partials/showpoll.html',
+        controller: 'pollsController as PC'
     })
     .when('/newpoll', {
         templateUrl: '/partials/newpoll.html'
@@ -92,9 +93,10 @@ pollsApp.factory('pollFactory', function($http){
     }
 
     factory.show = function(id, callback){
+        console.log(id);
         $http.get('/polls/show/' + id).success(function(output){
             that.poll = output;
-            callback(factory.poll);
+            callback(that.poll);
         })
     }
 
@@ -103,22 +105,25 @@ pollsApp.factory('pollFactory', function($http){
         return that.poll;
     }
 
-    factory.vote = function(ind){
-        var id = that.poll._id;
-        $http.post('/polls/vote/' + id, ind).success(function(output){
+    factory.vote = function(thePoll){
+        var id = thePoll._id;
+        $http.post('/polls/vote/' + id, thePoll).success(function(output){
+            console.log(output)
             that.poll = output;
+        })
+    }
+
+    factory.delete = function(id){
+        $http.post('/polls/delete/' + id).success(function(output){
+            console.log(output);
         })
     }
 
     return factory;
 })
 //Poll controller
-pollsApp.controller('pollsController', function(userFactory, pollFactory, $location){
+pollsApp.controller('pollsController', function(userFactory, pollFactory, $location, $routeParams){
     var that = this;
-    //get poll from show function stored in the factory
-    this.thePoll = pollFactory.getPoll();
-    console.log("The Poll: ", this.thePoll);
-    //get user stored in session in userFactory
     this.user = userFactory.user();
     this.index = function(){
         pollFactory.index(function(data){
@@ -155,32 +160,33 @@ pollsApp.controller('pollsController', function(userFactory, pollFactory, $locat
             console.log(data);
             that.newPoll = {};
         })
+        $location.url('/home');
     };
 
-    this.show = function(ind){
-        console.log(that.polls[ind]);
-        var id = that.polls[ind]._id;
-        that.thePoll = pollFactory.show(id, function(data){
+    this.show = function(id){
+        var id = $routeParams.id;
+        console.log("my id, ", id)
+        pollFactory.show(id, function(data){
             that.thePoll = data;
             console.log("Got poll back! ", that.thePoll);
-        })
-    }
+            $location.url('/show/'+id);
+        });
+    };
 
     this.vote = function(ind){
-        console.log("Voting! ", ind)
-        pollFactory.vote(ind, function(data){
+        that.thePoll.options[ind].votes++
+        console.log("Voting!", that.thePoll.options)
+        pollFactory.vote(that.thePoll, function(data){
             that.thePoll = data;
-        })
-    }
+        });
+    };
 
     this.delete = function(ind){
         console.log(that.polls[ind]);
         var id = that.polls[ind]._id;
-        pollFactory.delete(id, function(data){
-            
-        })
-
-    }
+        pollFactory.delete(id);
+        that.index();
+    };
 
 });
 

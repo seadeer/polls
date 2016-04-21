@@ -55,7 +55,7 @@ module.exports = {
     },
 
     show: function(req, res){
-        Poll.findOne({_id:req.params.id}, function(err, poll){
+        Poll.findById(req.params.id, function(err, poll){
             if(err){
                 res.json(err)
             }
@@ -67,11 +67,28 @@ module.exports = {
     },
 
     vote: function(req, res){
-        console.log("in server controller, index of voted: ", req.body.ind);
-        var id = req.params.id;
-        var ind = req.body.ind;
-        Poll.findByIdAndUpdate(id, {$inc: {'options.$.votes': 1}}, function(err, poll){
-            res.json(poll);
-        });
+        console.log("Voting! ", req.body);
+        Poll.update({_id: req.body._id}, {options: req.body.options}, function(err, poll){
+             if(err){
+                res.json(err);
+            }
+            else{
+                res.json(poll);
+                }
+            }
+        );
     },
+
+    delete: function(req, res){
+        Poll.remove({_id:req.params.id}, function(err, polls){
+            if(err){
+                res.json(err)
+            }
+            else{
+                res.json("Deleted 1 poll!")
+            }
+        })
+    }
+
+    
 };
